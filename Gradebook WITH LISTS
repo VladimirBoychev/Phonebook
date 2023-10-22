@@ -1,0 +1,165 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+
+class Gradebook
+{
+    static Dictionary<string, List<int>> students = new Dictionary<string, List<int>>();
+
+
+    static void Main()
+    {
+
+        Boolean ProgramRunning = true;
+        while (ProgramRunning)
+        {
+            Console.WriteLine(" ");
+            Console.WriteLine("Class Menu:");
+            Console.WriteLine("1. Add Student");
+            Console.WriteLine("2. Search for Student and grades");
+            Console.WriteLine("3. Delete Student");
+            Console.WriteLine("4. Display all students");
+            Console.WriteLine("5. Calculate the avarage grade");
+            Console.WriteLine("6. Exit");
+            Console.Write("Enter your choice: ");
+      
+
+            int choice;
+            if (int.TryParse(Console.ReadLine(), out choice))
+            {
+                if (choice == 1)
+                {
+                    addStudent();
+                }
+
+                if (choice == 2)
+                {
+                    SearchStudent();
+                }
+                if (choice == 3)
+                {
+                    DeleteStudent();
+                }
+                if (choice == 4)
+                {
+                    Display();
+                }
+                if (choice == 6)
+                {
+                    ProgramRunning = false;
+                }
+                if (choice == 5)
+                {
+                    AvarageGrade();
+                }
+                if (choice > 6)
+                {
+                    Console.WriteLine("Enter a valid choice number");
+
+                }
+
+            }
+
+        }
+    }
+
+    public static void addStudent()
+    {
+        Console.Write("Enter the name of the student: ");
+        string name = Console.ReadLine();
+        
+        List<int> grades = new List<int>();
+
+        bool addGrades = true;
+        while (addGrades)
+        {
+            Console.Write("Enter a grade (or 'done' to finish entering grades): ");
+            string grade = Console.ReadLine();
+
+            if (grade.ToLower() == "done")
+            {
+                addGrades = false;
+            }
+            else if (int.TryParse(grade, out int i))
+            {
+                grades.Add(i);
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a numeric grade.");
+            }
+        }
+
+        if (!students.ContainsKey(name))
+        {
+            students[name] = grades;
+            Console.WriteLine("Added successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Student already exists. Use the update option to modify the student.");
+        }
+    }
+    public static void SearchStudent()
+    {
+        Console.Write("Enter the name to search: ");
+        string name = Console.ReadLine();
+
+        if (students.ContainsKey(name))
+        {
+            Console.WriteLine($"Name: {name} Grades: {string.Join(", ", students[name])}");
+        }
+        else
+        {
+            Console.WriteLine("Student not found.");
+        }
+
+    }
+
+    public static void DeleteStudent()
+    {
+        Console.Write("Enter the name to delete: ");
+        string name = Console.ReadLine();
+
+        if (students.ContainsKey(name))
+        {
+            students.Remove(name);
+            Console.WriteLine("Student deleted successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Student not found.");
+        }
+    }
+
+    public static void Display()
+    {
+        Console.WriteLine();
+
+        Console.WriteLine("The glorious classbook");
+        Console.WriteLine();
+        foreach (var kvp in students)
+        {
+
+            Console.WriteLine($"Name: {kvp.Key}  Grades: {string.Join(", ", kvp.Value)}");
+        }
+    }
+    public static void AvarageGrade()
+    {
+        double sum = 0;
+        int count = 0;
+       
+        foreach (var kvp in students)
+        {
+            sum += kvp.Value.Average();
+            count++;
+        }
+
+        double average = sum / count;
+        Console.WriteLine($"The average grade is {average:F2}");
+    }
+
+
+}
