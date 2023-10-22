@@ -1,0 +1,164 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+class Coursebook
+{
+    static Dictionary<string, int> Courses = new Dictionary<string, int>();
+    static Dictionary<string, List<string>> studentCourses = new Dictionary<string, List<string>>();
+    static Dictionary<string, int> studentTotalCredits = new Dictionary<string, int>();
+
+    static void Main()
+    {
+
+        Boolean ProgramRunning = true;
+        try
+        {
+            while (ProgramRunning)
+            {
+                Console.WriteLine("Class Menu:");
+                Console.WriteLine("1. Add Student");
+                Console.WriteLine("2. Add a Cource");
+                Console.WriteLine("3. Merge dictionaries");
+                Console.WriteLine("4. Display a student's credits");
+                Console.WriteLine("5. Dispaly all info");
+                Console.WriteLine();
+                Console.Write("Enter your choice: ");
+
+                int choice;
+                if (int.TryParse(Console.ReadLine(), out choice))
+                {
+                    if (choice == 1)
+                    {
+                        addStudent();
+                    }
+                    if (choice == 2)
+                    {
+                        addCourse();
+                    }
+                    if (choice == 3)
+                    {
+                        MergeDictonaries();
+                        
+                    }
+                    if (choice == 4)
+                    {
+                        DisplayCredits();
+                    }
+                    if (choice == 5)
+                    {
+                        Display();
+                    }
+
+
+                }
+                else
+                    Console.WriteLine("Invalid responce");
+                Console.WriteLine();
+
+            }
+        }
+        catch { Console.WriteLine("An error occured"); }
+
+    }
+
+    public static void addStudent()
+    {
+
+        Console.Write("Enter the name of the student: ");
+        string name = Console.ReadLine();
+
+        Console.WriteLine("How many cources does the student visit?");
+        int numC = Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine("What does he visit?");
+        List<string> courcesList = new List<string>();
+
+        for (int i = 0; i < numC; i++)
+        {
+            courcesList.Add(Console.ReadLine());
+        }
+
+        if (!studentCourses.ContainsKey(name))
+        {
+
+            studentCourses.Add(name, courcesList);
+            Console.WriteLine("Added successfully.");
+        }
+
+        else
+        {
+            Console.WriteLine("Student already exists. Use the update option to modify the student.");
+        }
+
+    }
+    public static void addCourse()
+    {
+        Console.Write("Enter the name of the cource: ");
+        string name = Console.ReadLine();
+        Console.Write("Enter the credits of the course: ");
+        int credits = Convert.ToInt32(Console.ReadLine());
+        if (!Courses.ContainsKey(name)) 
+        {
+            Courses[name] = credits;
+            Console.WriteLine("Added successfully.");
+
+        }
+        else
+        {
+            Console.WriteLine("Student already exists. Use the update option to modify the student.");
+        }
+
+    }
+    public static void MergeDictonaries()
+    {
+        foreach (var student in studentCourses.Keys)
+        {
+            int totalCredits = 0;
+            if (studentCourses.ContainsKey(student))
+            {
+                foreach (var course in studentCourses[student])
+                {
+                    if (Courses.ContainsKey(course))
+                    {
+                        totalCredits += Courses[course];
+                    }
+                    studentTotalCredits[student] = totalCredits;
+
+                }
+            }
+        } }
+
+           public static void DisplayCredits()
+            {
+                Console.WriteLine("Whose student credits do you want to see?");
+                string name = Console.ReadLine();
+
+                if (studentTotalCredits.ContainsKey(name)) 
+                {
+                    Console.WriteLine($"Name: {name}, credits: {studentTotalCredits[name]}");
+                }
+                else
+                {
+                    Console.WriteLine("Student not found.");
+                }
+            }
+
+
+    public static void Display()
+    {
+        foreach (var student in studentCourses)
+        {
+            Console.Write($"Student is named {student.Key}, visits ");
+                
+                foreach (var cource in student.Value) { 
+            Console.Write(cource.ToString());
+            Console.Write(" ,");
+            }
+            string key = student.Key;
+            Console.WriteLine($" and therefore has {studentTotalCredits[key]} credits");  
+                }
+        }
+    }
+        
