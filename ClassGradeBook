@@ -1,0 +1,142 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
+class Gradebook
+{
+    static Dictionary<string, int> students = new Dictionary<string, int>();
+
+    static void Main()
+    {
+        Boolean ProgramRunning = true;
+        try { 
+        while (ProgramRunning)
+        {
+            Console.WriteLine("Class Menu:");
+            Console.WriteLine("1. Add Student");
+            Console.WriteLine("2. Search for Student and grades");
+            Console.WriteLine("3. Delete Student");
+            Console.WriteLine("4. Display all students");
+            Console.WriteLine("5. Exit");
+            Console.WriteLine("6. Calculate the avarage grade");
+            Console.WriteLine();
+            Console.Write("Enter your choice: ");
+
+            int choice;
+            if (int.TryParse(Console.ReadLine(), out choice))
+            {
+                if (choice == 1)
+                {
+                    addStudent();
+                }
+                if (choice == 2)
+                {
+                    SearchStudent();
+                }
+                if (choice == 3)
+                {
+                    DeleteStudent();
+                }
+                if (choice == 4)
+                {
+                    Display();
+                }
+                if (choice == 5)
+                {
+                    ProgramRunning = false;
+                }
+                if (choice == 6)
+                {
+                    AvarageGrade();
+                }
+                if (choice > 6)
+                {
+                    Console.WriteLine("Enter a valid choice number");
+
+                }
+
+            }
+            else
+                Console.WriteLine("Invalid responce");
+                Console.WriteLine();
+
+            } } catch { Console.WriteLine("An error occured"); }
+    }
+
+    public static void addStudent()
+    {
+        Console.Write("Enter the name of the student: ");
+        string name = Console.ReadLine();
+        Console.Write("Enter a grade: ");
+        int grade = Convert.ToInt32(Console.ReadLine());
+
+        if (!students.ContainsKey(name))
+        {
+            students[name] = grade;
+            Console.WriteLine("Added successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Student already exists. Use the update option to modify the student.");
+        }
+    }
+
+    public static void SearchStudent()
+    {
+        Console.Write("Enter the name to search: ");
+        string name = Console.ReadLine();
+
+        if (students.ContainsKey(name))
+        {
+            Console.WriteLine($"Name: {name}, Grade: {students[name]}");
+        }
+        else
+        {
+            Console.WriteLine("Student not found.");
+        }
+
+    }
+
+    public static void DeleteStudent()
+    {
+        Console.Write("Enter the name to delete: ");
+        string name = Console.ReadLine();
+
+        if (students.ContainsKey(name))
+        {
+            students.Remove(name);
+            Console.WriteLine("Student deleted successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Student not found.");
+        }
+    }
+
+    public static void Display()
+    {
+        Console.WriteLine();
+
+        Console.WriteLine("The glorious classbook");
+        Console.WriteLine();
+        foreach (var kvp in students)
+        {
+
+            Console.WriteLine("Name: " + kvp.Key + " Grade: " + kvp.Value);
+        }
+    }
+    public static void AvarageGrade()
+    {
+        int sum = 0;
+        int count = 0;
+        foreach (var i in students)
+        {
+            count++;
+            sum = sum + i.Value;
+        }
+
+        int av = sum/ count;
+
+        Console.WriteLine("The avarage grade is " + av + ".");
+    }
+}
