@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-//Project by Eva Vladimirova 12/A1
+
 class Gradebook
 {
     static Dictionary<string, List<int>> students = new Dictionary<string, List<int>>();
